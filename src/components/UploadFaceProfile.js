@@ -1,0 +1,81 @@
+import React, { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import referenceImage from "../reference-images/mike-mew.jpg";
+
+export default function UploadFaceProfile() {
+  const [image, setImage] = useState(null);
+  const [imageDimensions, setImageDimensions] = useState({
+    width: 0,
+    height: 0,
+  });
+  const inputRef = useRef();
+  const navigate = useNavigate();
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setImage(reader.result);
+
+      const img = new Image();
+      img.onload = function () {
+        setImageDimensions({ width: this.width, height: this.height });
+
+        // Navigate to new component with image data
+        navigate("/measure-growth", {
+          state: {
+            image: reader.result,
+            imageDimensions: { width: this.width, height: this.height },
+          },
+        });
+      };
+      img.src = reader.result;
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  return (
+    <div>
+      <div className="flex justify-center m-8">
+        <div className="w-1/3 p-4 border-gray-300 bg-gray-200 border-4 rounded-md mx-4">
+          <h1 className="text-xl font-semibold text-center">
+            Image Guidelines
+          </h1>
+          <ul className="list-disc pl-5">
+            <li>Photograph the patient’s face in a true lateral position.</li>
+            <li>
+              Use an ‘Alice’ band to make sure that neither the forehead nor the
+              tragus of the ear is obscured with hair.{" "}
+            </li>
+            <li>
+              Make sure a scale of centimetres or a 5cm marker is included. This
+              must be placed in the midline with the sagittal plane to ensure
+              accuracy.
+            </li>
+          </ul>
+        </div>
+        <div className="w-1/3 bg-gray-200 p-4 border-gray-300 border-4 rounded-md mx-4">
+          <h1 className="text-center text-xl font-semibold">Sample Image</h1>
+          <img src={referenceImage} alt="Sample Gnathiometer Profile Image" />
+        </div>
+      </div>
+      <div className="flex justify-center">
+        <button
+          className="bg-gray-200 hover:bg-gray-300 border-gray-300 px-32 py-12 text-2xl rounded-xl border-4 focus:border-gray-200 w-1/2"
+          onClick={() => inputRef.current.click()}
+        >
+          Upload Image ⬆️
+        </button>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          ref={inputRef}
+          style={{ display: "none" }}
+        />
+      </div>
+    </div>
+  );
+}

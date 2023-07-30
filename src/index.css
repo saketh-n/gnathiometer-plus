@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .h-half-screen {
+    height: 50vh;
+  }
+}
+
+body {
+  margin: 0;
+}
