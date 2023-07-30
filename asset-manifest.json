@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/gnathiometer-plus/static/css/main.4ed9c541.css",
+    "main.js": "/gnathiometer-plus/static/js/main.66ea8bc2.js",
+    "static/js/787.2f99c978.chunk.js": "/gnathiometer-plus/static/js/787.2f99c978.chunk.js",
+    "static/media/chin-marker-reference.png": "/gnathiometer-plus/static/media/chin-marker-reference.5748eaac7b15dd991c1d.png",
+    "static/media/guide.png": "/gnathiometer-plus/static/media/guide.24d1d8a76799d840b4dc.png",
+    "static/media/wei-after.png": "/gnathiometer-plus/static/media/wei-after.235acff8c853ec08b507.png",
+    "static/media/wei-before.png": "/gnathiometer-plus/static/media/wei-before.406ac5dd563760a34d1b.png",
+    "static/media/measure.png": "/gnathiometer-plus/static/media/measure.ba9b4540433fdf8a294e.png",
+    "static/media/improvement.png": "/gnathiometer-plus/static/media/improvement.0f95a0423463b54b318c.png",
+    "static/media/mike-mew.jpg": "/gnathiometer-plus/static/media/mike-mew.7b13128ce539627bbe37.jpg",
+    "static/media/growth-guide.jpeg": "/gnathiometer-plus/static/media/growth-guide.9f4190b27b9e35091a55.jpeg",
+    "static/media/overlain-growth-guide.jpeg": "/gnathiometer-plus/static/media/overlain-growth-guide.4879594881761ff5288b.jpeg",
+    "index.html": "/gnathiometer-plus/index.html",
+    "main.4ed9c541.css.map": "/gnathiometer-plus/static/css/main.4ed9c541.css.map",
+    "main.66ea8bc2.js.map": "/gnathiometer-plus/static/js/main.66ea8bc2.js.map",
+    "787.2f99c978.chunk.js.map": "/gnathiometer-plus/static/js/787.2f99c978.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4ed9c541.css",
+    "static/js/main.66ea8bc2.js"
+  ]
+}
