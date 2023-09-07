@@ -29,8 +29,6 @@ export default function MeasureGrowth() {
       return "Label Start of 5 CM Marker (Green Dot)";
     } else if (markers.length < 2) {
       return "Label Start of 5 CM Marker (Red Dot)";
-    } else if (markers.length == 2) {
-      return "Label Point N (See Growth Guide)";
     } else {
       if (guideLocked) {
         return "Guide Locked, Set Chin Marker (See Reference Image)";
@@ -64,11 +62,11 @@ export default function MeasureGrowth() {
   };
 
   const showGrowthGuide = () => {
-    return markers.length === 3;
+    return markers.length === 2;
   };
 
   const addNewMarker = (marker) => {
-    if (markers.length < 3) {
+    if (markers.length < 2) {
       setMarkers([...markers, marker]);
     }
   };
@@ -184,7 +182,7 @@ export default function MeasureGrowth() {
             onAddMarker={(marker) => addNewMarker(marker)}
             markerComponent={FaceMarker}
           />
-          {markers.length === 3 && guideLocked && (
+          {markers.length === 2 && guideLocked && (
             <div
               style={{
                 position: "absolute",
@@ -234,7 +232,7 @@ export default function MeasureGrowth() {
       </div>
 
       <div className="flex justify-center my-8">
-        {markers.length < 3 ? (
+        {markers.length < 2 ? (
           <button
             className="bg-gray-200 hover:bg-gray-300 border-gray-300 px-32 py-8 text-2xl rounded-xl border-4 focus:border-gray-200 w-1/2"
             onClick={() => navigate("/upload-image-fg")}
