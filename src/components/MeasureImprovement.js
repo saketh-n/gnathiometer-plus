@@ -380,6 +380,14 @@ export default function MeasureImprovement() {
           </h1>
         </>
       )}
+      <div className="flex justify-center my-8">
+        <button
+          className="bg-gray-200 hover:bg-gray-300 border-gray-300 px-32 py-8 text-2xl rounded-xl border-4 focus:border-gray-200 w-1/2"
+          onClick={() => navigate("/")}
+        >
+          Home Page 🏠
+        </button>
+      </div>
     </>
   );
 }

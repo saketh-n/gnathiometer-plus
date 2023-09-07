@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, Link } from "react-router-dom";
 import MeasureGrowth from "./components/MeasureGrowth";
 import MeasureImprovement from "./components/MeasureImprovement";
 import UploadFaceProfile from "./components/UploadFaceProfile";
