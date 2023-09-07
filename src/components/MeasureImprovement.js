@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import ImageMarker from "react-image-marker";
 import { ChinMarker } from "./ChinMarker";
+import { FaceMarker } from "./markers/FaceMarker";
 
 import growthGuide from "./growth-guide.jpeg";
 import referenceChinMarker from "./chin-marker-reference.png";
@@ -58,8 +59,10 @@ export default function MeasureImprovement() {
   };
 
   const labelText = () => {
-    if (markerGroup.length < 2) {
-      return "Label 5 CM Marker";
+    if (markers.length < 1) {
+      return "Label Start of 5 CM Marker (Green Dot)";
+    } else if (markers.length < 2) {
+      return "Label Start of 5 CM Marker (Red Dot)";
     } else if (markerGroup.length == 2) {
       return "Label Point N (See Growth Guide)";
     } else {
@@ -282,6 +285,7 @@ export default function MeasureImprovement() {
             src={image}
             markers={markers}
             onAddMarker={(marker) => addNewMarker(marker)}
+            markerComponent={FaceMarker}
           />
           {markers.length === 3 && (
             <div
@@ -312,6 +316,7 @@ export default function MeasureImprovement() {
                   src={afterImage}
                   markers={afterMarkers}
                   onAddMarker={(marker) => addNewMarker(marker)}
+                  markerComponent={FaceMarker}
                 />
                 {afterMarkers.length === 3 && (
                   <div

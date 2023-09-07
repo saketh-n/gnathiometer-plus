@@ -4,8 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ImageMarker from "react-image-marker";
 import Draggable from "react-draggable";
 import { ChinMarker } from "./ChinMarker";
-import { ArrowMarker } from "./ArrowMarker";
-import { SmallCircleMarker } from "./SmallMarker";
+import { FaceMarker } from "./markers/FaceMarker";
 
 import growthGuide from "./growth-guide.jpeg";
 import overlainGrowthGuide from "./overlain-growth-guide.jpeg";
@@ -26,8 +25,10 @@ export default function MeasureGrowth() {
   const navigate = useNavigate();
 
   const labelText = () => {
-    if (markers.length < 2) {
-      return "Label 5 CM Marker";
+    if (markers.length < 1) {
+      return "Label Start of 5 CM Marker (Green Dot)";
+    } else if (markers.length < 2) {
+      return "Label Start of 5 CM Marker (Red Dot)";
     } else if (markers.length == 2) {
       return "Label Point N (See Growth Guide)";
     } else {
@@ -149,19 +150,6 @@ export default function MeasureGrowth() {
     }
   }, [markers]);
 
-  const generateMarker = () => {
-    if (markers.length === 0) {
-      // return green dot
-      return <SmallCircleMarker color="green" />;
-    } else if (markers.length === 1) {
-      // return red dot
-      return <SmallCircleMarker color="red" />;
-    } else {
-      // return
-      return <ArrowMarker />;
-    }
-  };
-
   return (
     <>
       <div className="my-8">
@@ -194,6 +182,7 @@ export default function MeasureGrowth() {
             src={image}
             markers={markers}
             onAddMarker={(marker) => addNewMarker(marker)}
+            markerComponent={FaceMarker}
           />
           {markers.length === 3 && guideLocked && (
             <div
