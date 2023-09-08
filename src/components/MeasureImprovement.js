@@ -26,8 +26,8 @@ export default function MeasureImprovement() {
     width: 0,
     height: 0,
   });
-  const [chinMarkerRotation, setChinMarkerRotation] = useState(0);
-  const [afterChinMarkerRotation, setAfterChinMarkerRotation] = useState(0);
+  const [chinMarkerRotation, setChinMarkerRotation] = useState(315);
+  const [afterChinMarkerRotation, setAfterChinMarkerRotation] = useState(315);
   const [circlePosition, setCirclePosition] = useState({ x: 0, y: 0 });
   const [afterCirclePosition, setAfterCirclePosition] = useState({
     x: 0,

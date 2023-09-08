@@ -20,7 +20,7 @@ export default function MeasureGrowth() {
   const [markers, setMarkers] = useState([]);
   const [guideLocked, setGuideLocked] = useState(false);
   const [degree, setDegree] = useState(0);
-  const [chinMarkerRotation, setChinMarkerRotation] = useState(0);
+  const [chinMarkerRotation, setChinMarkerRotation] = useState(315);
 
   const navigate = useNavigate();
 

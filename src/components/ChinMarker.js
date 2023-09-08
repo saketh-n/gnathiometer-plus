@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Stage, Layer, Line, Circle, Group } from "react-konva";
+import React from "react";
+import { Stage, Layer, Line, Arrow, Group } from "react-konva";
 
 export function ChinMarker({
   position,
-  onDragMove,
   imageWidth,
   imageHeight,
   twoMM,
@@ -13,13 +12,11 @@ export function ChinMarker({
   const lineLength = 25 * twoMM;
   const gapLength = 5 * twoMM;
   const lineColor = "black";
-  const circleColor = "red";
+  const arrowColor = "red";
   const lineWidth = twoMM;
 
   const leftLinePoints = [0, 0, lineLength / 2 - gapLength / 2, 0];
   const rightLinePoints = [lineLength / 2 + gapLength / 2, 0, lineLength, 0];
-
-  const circlePosition = { x: lineLength / 2, y: 0 };
 
   return (
     <div>
@@ -33,18 +30,32 @@ export function ChinMarker({
         position={position}
       >
         <Layer>
-          <Group rotation={rotation} offsetX={circlePosition.x}>
+          <Group rotation={rotation}>
             <Line
               points={leftLinePoints}
               stroke={lineColor}
               strokeWidth={lineWidth}
             />
+            {/* Right line with -45 degree rotation */}
             <Line
               points={rightLinePoints}
               stroke={lineColor}
               strokeWidth={lineWidth}
             />
-            <Circle radius={lineWidth} fill={circleColor} {...circlePosition} />
+            {/* Arrow at the center, orthogonal to the line */}
+            <Arrow
+              points={[
+                lineLength / 2 + gapLength / 2 - (5 / 2) * twoMM,
+                twoMM * 3,
+                lineLength / 2 + gapLength / 2 - (5 / 2) * twoMM,
+                -3 * twoMM,
+              ]}
+              pointerLength={twoMM * 3}
+              pointerWidth={twoMM * 3}
+              fill={arrowColor}
+              stroke={arrowColor}
+              strokeWidth={1}
+            />
           </Group>
         </Layer>
       </Stage>
