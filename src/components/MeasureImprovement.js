@@ -16,6 +16,8 @@ export default function MeasureImprovement() {
     imageDimensions.height / imageDimensions.width
   );
   const inputRef = useRef();
+  const initialX = (window.innerWidth / 4 - 8) * 0.75;
+  const initialY = ((window.innerWidth * aspectRatio) / 4 - 8) * 0.75;
 
   // markers for the before image
   const [markers, setMarkers] = useState([]);
@@ -28,10 +30,13 @@ export default function MeasureImprovement() {
   });
   const [chinMarkerRotation, setChinMarkerRotation] = useState(315);
   const [afterChinMarkerRotation, setAfterChinMarkerRotation] = useState(315);
-  const [circlePosition, setCirclePosition] = useState({ x: 0, y: 0 });
+  const [circlePosition, setCirclePosition] = useState({
+    x: initialX,
+    y: initialY,
+  });
   const [afterCirclePosition, setAfterCirclePosition] = useState({
-    x: 0,
-    y: 0,
+    x: initialX,
+    y: initialY,
   });
   const [improvement, setImprovement] = useState({ x: 0, y: 0 });
 
@@ -291,8 +296,8 @@ export default function MeasureImprovement() {
             <div
               style={{
                 position: "absolute",
-                top: 16,
-                left: 16,
+                top: 0,
+                left: 0,
                 width: "100%",
                 height: "100%",
                 zIndex: 1, // Use zIndex to overlay it on the ImageMarker
@@ -304,6 +309,7 @@ export default function MeasureImprovement() {
                 rotation={chinMarkerRotation}
                 twoMM={beforeFiveCMPixelDistance() / 25}
                 onCirclePositionChange={handleCirclePositionChange}
+                position={circlePosition}
               />
             </div>
           )}
@@ -322,8 +328,8 @@ export default function MeasureImprovement() {
                   <div
                     style={{
                       position: "absolute",
-                      top: 16,
-                      left: 16,
+                      top: 0,
+                      left: 0,
                       width: "100%",
                       height: "100%",
                       zIndex: 1, // Use zIndex to overlay it on the ImageMarker
@@ -341,6 +347,7 @@ export default function MeasureImprovement() {
                       rotation={afterChinMarkerRotation}
                       twoMM={afterFiveCMPixelDistance() / 25}
                       onCirclePositionChange={handleAfterCirclePositionChange}
+                      position={afterCirclePosition}
                     />
                   </div>
                 )}

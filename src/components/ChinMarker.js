@@ -18,6 +18,9 @@ export function ChinMarker({
   const leftLinePoints = [0, 0, lineLength / 2 - gapLength / 2, 0];
   const rightLinePoints = [lineLength / 2 + gapLength / 2, 0, lineLength, 0];
 
+  console.log("twoMM:", twoMM);
+  console.log("position: ", position);
+
   return (
     <div>
       <Stage

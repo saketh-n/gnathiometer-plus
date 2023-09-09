@@ -141,6 +141,9 @@ export default function MeasureGrowth() {
     setGuideHeightInPixels(23.67 * newProportion);
   };
 
+  const initialX = (window.innerWidth / 4 - 8) * 0.75;
+  const initialY = ((window.innerWidth * aspectRatio) / 4 - 8) * 0.75;
+
   // Use useEffect to watch the markers array and update the guide dimensions when there are two or more markers
   useEffect(() => {
     if (markers.length >= 2) {
@@ -198,6 +201,7 @@ export default function MeasureGrowth() {
                 imageHeight={(window.innerWidth * aspectRatio) / 4 - 8}
                 rotation={chinMarkerRotation}
                 twoMM={fiveCMPixelDistance() / 25}
+                position={{ x: initialX, y: initialY }}
               />
             </div>
           )}
