@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/gnathiometer-plus/static/css/main.4ed9c541.css",
-    "main.js": "/gnathiometer-plus/static/js/main.28ae28e1.js",
+    "main.css": "/gnathiometer-plus/static/css/main.250bd0ce.css",
+    "main.js": "/gnathiometer-plus/static/js/main.b2ab9ae6.js",
     "static/js/787.2f99c978.chunk.js": "/gnathiometer-plus/static/js/787.2f99c978.chunk.js",
     "static/media/chin-marker-reference.png": "/gnathiometer-plus/static/media/chin-marker-reference.750b14ef141e1fd10333.png",
     "static/media/guide.png": "/gnathiometer-plus/static/media/guide.24d1d8a76799d840b4dc.png",
@@ -13,12 +13,12 @@
     "static/media/growth-guide.jpeg": "/gnathiometer-plus/static/media/growth-guide.9f4190b27b9e35091a55.jpeg",
     "static/media/overlain-growth-guide.jpeg": "/gnathiometer-plus/static/media/overlain-growth-guide.4879594881761ff5288b.jpeg",
     "index.html": "/gnathiometer-plus/index.html",
-    "main.4ed9c541.css.map": "/gnathiometer-plus/static/css/main.4ed9c541.css.map",
-    "main.28ae28e1.js.map": "/gnathiometer-plus/static/js/main.28ae28e1.js.map",
+    "main.250bd0ce.css.map": "/gnathiometer-plus/static/css/main.250bd0ce.css.map",
+    "main.b2ab9ae6.js.map": "/gnathiometer-plus/static/js/main.b2ab9ae6.js.map",
     "787.2f99c978.chunk.js.map": "/gnathiometer-plus/static/js/787.2f99c978.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.4ed9c541.css",
-    "static/js/main.28ae28e1.js"
+    "static/css/main.250bd0ce.css",
+    "static/js/main.b2ab9ae6.js"
   ]
 }
