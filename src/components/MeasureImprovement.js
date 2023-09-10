@@ -40,8 +40,21 @@ export default function MeasureImprovement() {
   });
   const [improvement, setImprovement] = useState({ x: 0, y: 0 });
 
+  const [sliderValue, setSliderValue] = useState(5);
+  const [afterSliderValue, setAfterSliderValue] = useState(5);
+
   const markerGroup = afterImage ? afterMarkers : markers;
   const setMarkerGroup = afterImage ? setAfterMarkers : setMarkers;
+
+  // Calculate the position for the number label
+  const sliderWidth = 300; // Assuming the slider is 300px wide
+  const sValue = markers.length < 2 ? sliderValue : afterSliderValue;
+  const setSValue = markers.length < 2 ? setSliderValue : setAfterSliderValue;
+  const position = ((sValue - 1) / 29) * sliderWidth;
+
+  const handleSliderChange = (e) => {
+    setSValue(e.target.value);
+  };
 
   const navigate = useNavigate();
 
@@ -64,10 +77,10 @@ export default function MeasureImprovement() {
   };
 
   const labelText = () => {
-    if (markers.length < 1) {
-      return "Label Start of 5 CM Marker (Green Dot)";
-    } else if (markers.length < 2) {
-      return "Label Start of 5 CM Marker (Red Dot)";
+    if (markerGroup.length < 1) {
+      return `Label Start of ${sValue} CM Marker (Green Dot)`;
+    } else if (markerGroup.length < 2) {
+      return `Label End of ${sValue} CM Marker (Red Dot)`;
     } else if (markerGroup.length == 2) {
       return "Label Point N (See Growth Guide)";
     } else {
@@ -79,7 +92,7 @@ export default function MeasureImprovement() {
     return "Rotate It (Use Bottom Row Buttons) such that it is tangent to the chin.";
   };
 
-  const beforeFiveCMPixelDistance = () => {
+  const beforeCMPixelDistance = () => {
     if (markers.length >= 2) {
       const marker1 = markers[0];
       const marker2 = markers[1];
@@ -94,7 +107,7 @@ export default function MeasureImprovement() {
     }
   };
 
-  const afterFiveCMPixelDistance = () => {
+  const afterCMPixelDistance = () => {
     if (afterMarkers.length >= 2) {
       const marker1 = afterMarkers[0];
       const marker2 = afterMarkers[1];
@@ -205,17 +218,17 @@ export default function MeasureImprovement() {
   };
 
   const calculateImprovement = () => {
-    console.log("MARKER 0", markers[0]);
     if (markers.length >= 3 && afterMarkers.length >= 3) {
       const beforeWidth = window.innerWidth / 4 - 8;
       const beforeHeight =
         beforeWidth * (imageDimensions.height / imageDimensions.width);
-      const beforePixelToMMRatio = 50 / beforeFiveCMPixelDistance(); // 50 mm equivalent to beforeFiveCMPixelDistance pixels
+      const beforePixelToMMRatio = (sliderValue * 10) / beforeCMPixelDistance(); // 50 mm equivalent to beforeFiveCMPixelDistance pixels
 
       const afterWidth = window.innerWidth / 4 - 8;
       const afterHeight =
         afterWidth * (afterImageDimensions.height / afterImageDimensions.width);
-      const afterPixelToMMRatio = 50 / afterFiveCMPixelDistance(); // 50 mm equivalent to afterFiveCMPixelDistance pixels
+      const afterPixelToMMRatio =
+        (afterSliderValue * 10) / afterCMPixelDistance(); // 50 mm equivalent to afterFiveCMPixelDistance pixels
 
       // Calculate difference for first image
       const difference = {
@@ -263,6 +276,34 @@ export default function MeasureImprovement() {
     <>
       <div className="my-8">
         <h1 className="text-center text-xl font-semibold">{labelText()}</h1>
+        {markerGroup.length < 2 && (
+          <div>
+            <div class="relative mx-auto w-80 text-center">
+              <p>Adjust Marker Size (CM)</p>
+            </div>
+            <div class="relative mx-auto w-80">
+              <input
+                type="range"
+                min={1}
+                max={30}
+                value={sValue}
+                step="1"
+                style={{ width: `${sliderWidth}px` }}
+                onChange={handleSliderChange}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  top: "30px",
+                  left: `${position}px`,
+                  transform: "translateX(-50%)",
+                }}
+              >
+                {sValue} CM
+              </div>
+            </div>
+          </div>
+        )}
         {markerGroup.length == 3 && (
           <>
             <h1 className="text-center text-large font-semibold">
@@ -307,7 +348,7 @@ export default function MeasureImprovement() {
                 imageWidth={window.innerWidth / 4 - 8}
                 imageHeight={(window.innerWidth * aspectRatio) / 4 - 8}
                 rotation={chinMarkerRotation}
-                twoMM={beforeFiveCMPixelDistance() / 25}
+                twoMM={beforeCMPixelDistance() / (sliderValue * 5)}
                 onCirclePositionChange={handleCirclePositionChange}
                 position={circlePosition}
               />
@@ -345,7 +386,7 @@ export default function MeasureImprovement() {
                         8
                       }
                       rotation={afterChinMarkerRotation}
-                      twoMM={afterFiveCMPixelDistance() / 25}
+                      twoMM={afterCMPixelDistance() / (sliderValue * 5)}
                       onCirclePositionChange={handleAfterCirclePositionChange}
                       position={afterCirclePosition}
                     />

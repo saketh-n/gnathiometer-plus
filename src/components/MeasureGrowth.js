@@ -21,14 +21,19 @@ export default function MeasureGrowth() {
   const [guideLocked, setGuideLocked] = useState(false);
   const [degree, setDegree] = useState(0);
   const [chinMarkerRotation, setChinMarkerRotation] = useState(315);
+  const [sliderValue, setSliderValue] = useState(5);
+
+  const handleSliderChange = (e) => {
+    setSliderValue(e.target.value);
+  };
 
   const navigate = useNavigate();
 
   const labelText = () => {
     if (markers.length < 1) {
-      return "Label Start of 5 CM Marker (Green Dot)";
+      return `Label Start of ${sliderValue} CM Marker (Green Dot)`;
     } else if (markers.length < 2) {
-      return "Label Start of 5 CM Marker (Red Dot)";
+      return `Label End of ${sliderValue} CM Marker (Red Dot)`;
     } else {
       if (guideLocked) {
         return "Guide Locked, Set Chin Marker (See Reference Image)";
@@ -46,7 +51,7 @@ export default function MeasureGrowth() {
     }
   };
 
-  const fiveCMPixelDistance = () => {
+  const cmPixelDistance = () => {
     if (markers.length >= 2) {
       const marker1 = markers[0];
       const marker2 = markers[1];
@@ -106,21 +111,23 @@ export default function MeasureGrowth() {
     setGuideLocked(!guideLocked);
   };
 
-  const proportion = fiveCMPixelDistance() / 5;
+  const proportion = () => {
+    return cmPixelDistance() / sliderValue;
+  };
 
   // Assuming the provided dimensions are in cm, convert them to pixel equivalent using the 5cm pixel distance
   // Set initial state for guide width and height
   const [guideWidthInPixels, setGuideWidthInPixels] = useState(
-    17.72 * proportion
+    17.72 * proportion()
   );
   const [guideHeightInPixels, setGuideHeightInPixels] = useState(
-    23.67 * proportion
+    23.67 * proportion()
   );
 
   // Create a function to handle the resize event
   const handleResize = () => {
     if (markers.length >= 2) {
-      const newProportion = fiveCMPixelDistance() / 5;
+      const newProportion = proportion();
       setGuideWidthInPixels(17.72 * newProportion);
       setGuideHeightInPixels(23.67 * newProportion);
     }
@@ -136,7 +143,7 @@ export default function MeasureGrowth() {
 
   // Create a function to update guide width and height
   const updateGuideDimensions = () => {
-    const newProportion = fiveCMPixelDistance() / 5;
+    const newProportion = proportion();
     setGuideWidthInPixels(17.72 * newProportion);
     setGuideHeightInPixels(23.67 * newProportion);
   };
@@ -151,10 +158,43 @@ export default function MeasureGrowth() {
     }
   }, [markers]);
 
+  // Calculate the position for the number label
+  const sliderWidth = 300; // Assuming the slider is 300px wide
+  const position = ((sliderValue - 1) / 29) * sliderWidth;
+
   return (
     <>
       <div className="my-8">
         <h1 className="text-center text-xl font-semibold">{labelText()}</h1>
+        {markers.length < 2 && (
+          <div>
+            <div class="relative mx-auto w-80 text-center">
+              <p>Adjust Marker Size (CM)</p>
+            </div>
+            <div class="relative mx-auto w-80">
+              <input
+                type="range"
+                min={1}
+                max={30}
+                value={sliderValue}
+                step="1"
+                style={{ width: `${sliderWidth}px` }}
+                onChange={handleSliderChange}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  top: "30px",
+                  left: `${position}px`,
+                  transform: "translateX(-50%)",
+                }}
+              >
+                {sliderValue} CM
+              </div>
+            </div>
+          </div>
+        )}
+
         {markers.length == 3 && (
           <>
             <h1 className="text-center text-large font-semibold">
@@ -200,7 +240,7 @@ export default function MeasureGrowth() {
                 imageWidth={window.innerWidth / 4 - 8}
                 imageHeight={(window.innerWidth * aspectRatio) / 4 - 8}
                 rotation={chinMarkerRotation}
-                twoMM={fiveCMPixelDistance() / 25}
+                twoMM={cmPixelDistance() / (sliderValue * 5)}
                 position={{ x: initialX, y: initialY }}
               />
             </div>
