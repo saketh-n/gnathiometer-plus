@@ -301,6 +301,45 @@ export default function MeasureGrowth() {
           </button>
         ) : (
           <div className="flex space-x-4">
+            <div className="flex flex-col items-center space-y-2 w-1/2">
+              <input
+                type="range"
+                min="0"
+                max="360"
+                step="0.1"
+                value={guideLocked ? chinMarkerRotation : degree}
+                onChange={(e) => {
+                  const newAngle = parseFloat(e.target.value);
+                  guideLocked
+                    ? setChinMarkerRotation(newAngle)
+                    : setDegree(newAngle);
+                }}
+                className="w-full"
+              />
+              <label className="text-xl">
+                Current Rotation:{" "}
+                {guideLocked
+                  ? chinMarkerRotation.toFixed(1)
+                  : degree.toFixed(1)}
+                °
+              </label>
+              <input
+                type="number"
+                min="0"
+                max="360"
+                step="0.1"
+                value={guideLocked ? chinMarkerRotation : degree}
+                onChange={(e) => {
+                  const newAngle = parseFloat(e.target.value);
+                  if (newAngle >= 0 && newAngle <= 360) {
+                    guideLocked
+                      ? setChinMarkerRotation(newAngle)
+                      : setDegree(newAngle);
+                  }
+                }}
+                className="border-2 border-gray-300 rounded w-32 text-center"
+              />
+            </div>
             <button
               className="bg-gray-200 hover:bg-gray-300 border-gray-300 px-8 py-8 text-3xl rounded-xl border-4 focus:border-gray-200"
               onClick={rotateBackward}
