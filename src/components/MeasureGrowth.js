@@ -22,6 +22,21 @@ export default function MeasureGrowth() {
   const [degree, setDegree] = useState(0);
   const [chinMarkerRotation, setChinMarkerRotation] = useState(315);
   const [sliderValue, setSliderValue] = useState(5);
+  const [transformOrigin, setTransformOrigin] = React.useState("50% 50%");
+
+  const handleDrag = (e, data) => {
+    // Compute the new transformOrigin based on data.x and data.y
+    // For example, if it should rotate around its own center relative to the parent:
+    const pointNXCoord = (458 / 575) * guideWidthInPixels;
+    const pointNYCoord = (231 / 768) * guideHeightInPixels;
+    const newTransformOrigin = `${data.x + pointNXCoord}px ${
+      data.y + pointNYCoord
+    }px`;
+    console.log("X", pointNXCoord);
+    console.log("Y", pointNYCoord);
+    setTransformOrigin(newTransformOrigin);
+    console.log(newTransformOrigin);
+  };
 
   const handleSliderChange = (e) => {
     setSliderValue(e.target.value);
@@ -256,9 +271,10 @@ export default function MeasureGrowth() {
             className="absolute"
             style={{
               transform: `rotate(${degree}deg)`,
+              transformOrigin: transformOrigin,
             }}
           >
-            <Draggable disabled={guideLocked}>
+            <Draggable disabled={guideLocked} onDrag={handleDrag}>
               <img
                 className="processedImage"
                 src={transparentGuide}
@@ -266,7 +282,7 @@ export default function MeasureGrowth() {
                 style={{
                   maxWidth: `${guideWidthInPixels}px`,
                   maxHeight: `${guideHeightInPixels}px`,
-                  transformOrigin: "50% 50%",
+                  //transformOrigin: "50% 50%",
                   pointerEvents: guideLocked ? "none" : "auto",
                 }}
               />
