@@ -1,12 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import ImageMarker from "react-image-marker";
 import Draggable from "react-draggable";
 import { ChinMarker } from "./ChinMarker";
-import { FaceMarker } from "./markers/FaceMarker";
 
-import growthGuide from "./growth-guide.jpeg";
 import overlainGrowthGuide from "./overlain-growth-guide.jpeg";
 import referenceChinMarker from "./chin-marker-reference.png";
 import transparentGuide from "./guide.png";
@@ -16,92 +13,37 @@ export default function MeasureGrowth() {
 
   const { image, imageDimensions } = location.state;
   const aspectRatio = imageDimensions.height / imageDimensions.width;
+  const width = window.innerWidth / 4 - 8;
 
-  const [markers, setMarkers] = useState([]);
   const [guideLocked, setGuideLocked] = useState(false);
   const [degree, setDegree] = useState(0);
   const [chinMarkerRotation, setChinMarkerRotation] = useState(315);
-  const [sliderValue, setSliderValue] = useState(5);
   const [transformOrigin, setTransformOrigin] = React.useState("50% 50%");
 
   const handleDrag = (e, data) => {
     // Compute the new transformOrigin based on data.x and data.y
     // For example, if it should rotate around its own center relative to the parent:
     const pointNXCoord = (458 / 575) * guideWidthInPixels;
-    const pointNYCoord = (231 / 768) * guideHeightInPixels;
+    const pointNYCoord = (231 / 768) * guideWidthInPixels * (23.67 / 17.72);
     const newTransformOrigin = `${data.x + pointNXCoord}px ${
       data.y + pointNYCoord
     }px`;
-    console.log("X", pointNXCoord);
-    console.log("Y", pointNYCoord);
     setTransformOrigin(newTransformOrigin);
-    console.log(newTransformOrigin);
-  };
-
-  const handleSliderChange = (e) => {
-    setSliderValue(e.target.value);
   };
 
   const navigate = useNavigate();
 
   const labelText = () => {
-    if (markers.length < 1) {
-      return `Label Start of ${sliderValue} CM Marker (Green Dot)`;
-    } else if (markers.length < 2) {
-      return `Label End of ${sliderValue} CM Marker (Red Dot)`;
-    } else {
-      if (guideLocked) {
-        return "Guide Locked, Set Chin Marker (See Reference Image)";
-      } else {
-        return "Overlay Growth Guide (See Reference Image)";
-      }
-    }
-  };
-
-  const subHeaderText = () => {
     if (guideLocked) {
-      return "Rotate It (Use Bottom Row Buttons) such that it is tangent to the chin.";
+      return "Guide Locked, Set Chin Marker (See Reference Image)";
     } else {
-      return "Rotate & Lock It When Done (Use Bottom Row Buttons)";
-    }
-  };
-
-  const cmPixelDistance = () => {
-    if (markers.length >= 2) {
-      const marker1 = markers[0];
-      const marker2 = markers[1];
-      const width = window.innerWidth / 4 - 8;
-      const height = width * aspectRatio;
-      const xDist = (marker2.left / 100) * width - (marker1.left / 100) * width;
-      const yDist = (marker2.top / 100) * height - (marker1.top / 100) * height;
-
-      return Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
-    } else {
-      return 0;
-    }
-  };
-
-  const showGrowthGuide = () => {
-    return markers.length === 2;
-  };
-
-  const addNewMarker = (marker) => {
-    if (markers.length < 2) {
-      setMarkers([...markers, marker]);
-    }
-  };
-
-  const removeLastMarker = () => {
-    if (markers.length > 1) {
-      setMarkers(markers.slice(0, -1));
-    } else if (markers.length == 1) {
-      setMarkers([]);
+      return "Scale the Growth Guide (use marker + 5 cm indication), then Overlay it (See Reference Image)";
     }
   };
 
   const referenceImageSource = () => {
     if (!guideLocked) {
-      return markers.length === 2 ? growthGuide : overlainGrowthGuide;
+      return overlainGrowthGuide;
     } else {
       return referenceChinMarker;
     }
@@ -126,121 +68,29 @@ export default function MeasureGrowth() {
     setGuideLocked(!guideLocked);
   };
 
-  const proportion = () => {
-    return cmPixelDistance() / sliderValue;
+  const cmEstimation = () => {
+    const value = Math.ceil(width / 30);
+    return value;
   };
 
   // Assuming the provided dimensions are in cm, convert them to pixel equivalent using the 5cm pixel distance
   // Set initial state for guide width and height
   const [guideWidthInPixels, setGuideWidthInPixels] = useState(
-    17.72 * proportion()
+    18 * cmEstimation()
   );
-  const [guideHeightInPixels, setGuideHeightInPixels] = useState(
-    23.67 * proportion()
-  );
-
-  // Create a function to handle the resize event
-  const handleResize = () => {
-    if (markers.length >= 2) {
-      const newProportion = proportion();
-      setGuideWidthInPixels(17.72 * newProportion);
-      setGuideHeightInPixels(23.67 * newProportion);
-    }
-  };
-
-  // Use the useEffect hook to add the event listener
-  useEffect(() => {
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []); // Pass an empty array as the dependency to run this hook only once, when the component is first mounted
-
-  // Create a function to update guide width and height
-  const updateGuideDimensions = () => {
-    const newProportion = proportion();
-    setGuideWidthInPixels(17.72 * newProportion);
-    setGuideHeightInPixels(23.67 * newProportion);
-  };
 
   const initialX = (window.innerWidth / 4 - 8) * 0.75;
   const initialY = ((window.innerWidth * aspectRatio) / 4 - 8) * 0.75;
-
-  // Use useEffect to watch the markers array and update the guide dimensions when there are two or more markers
-  useEffect(() => {
-    if (markers.length >= 2) {
-      updateGuideDimensions();
-    }
-  }, [markers]);
-
-  // Calculate the position for the number label
-  const sliderWidth = 300; // Assuming the slider is 300px wide
-  const position = ((sliderValue - 1) / 29) * sliderWidth;
 
   return (
     <>
       <div className="my-8">
         <h1 className="text-center text-xl font-semibold">{labelText()}</h1>
-        {markers.length < 2 && (
-          <div>
-            <div class="relative mx-auto w-80 text-center">
-              <p>Adjust Marker Size (CM)</p>
-            </div>
-            <div class="relative mx-auto w-80">
-              <input
-                type="range"
-                min={1}
-                max={30}
-                value={sliderValue}
-                step="1"
-                style={{ width: `${sliderWidth}px` }}
-                onChange={handleSliderChange}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  top: "30px",
-                  left: `${position}px`,
-                  transform: "translateX(-50%)",
-                }}
-              >
-                {sliderValue} CM
-              </div>
-            </div>
-          </div>
-        )}
-
-        {markers.length == 3 && (
-          <>
-            <h1 className="text-center text-large font-semibold">
-              {subHeaderText()}
-            </h1>
-            <h1 className="text-center text-large font-semibold">
-              {guideLocked &&
-                "Place the red dot on the Gnathion (downward and forward-most point on the Chin)"}
-            </h1>
-          </>
-        )}
-      </div>
-      <div className="flex justify-center my-8">
-        {!guideLocked && (
-          <button
-            className="bg-gray-200 hover:bg-gray-300 border-gray-300 px-32 py-8 text-2xl rounded-xl border-4 focus:border-gray-200 w-1/2"
-            onClick={removeLastMarker}
-          >
-            ❌ Remove Marker
-          </button>
-        )}
       </div>
       <div className="flex justify-center my-8 space-x-4 relative">
         <div className="w-1/4 bg-gray-200 p-4 rounded-xl relative">
-          <ImageMarker
-            src={image}
-            markers={markers}
-            onAddMarker={(marker) => addNewMarker(marker)}
-            markerComponent={FaceMarker}
-          />
-          {markers.length === 2 && guideLocked && (
+          <img src={image} alt="Patient" />
+          {guideLocked && (
             <div
               style={{
                 position: "absolute",
@@ -255,51 +105,39 @@ export default function MeasureGrowth() {
                 imageWidth={window.innerWidth / 4 - 8}
                 imageHeight={(window.innerWidth * aspectRatio) / 4 - 8}
                 rotation={chinMarkerRotation}
-                twoMM={cmPixelDistance() / (sliderValue * 5)}
+                twoMM={guideWidthInPixels / (17.72 * 5)}
                 position={{ x: initialX, y: initialY }}
               />
             </div>
           )}
         </div>
-        {markers.length >= 2 && (
-          <div className="w-1/3 bg-gray-200 p-4 rounded-xl">
-            <img src={referenceImageSource()} alt="Gnathiometer Growth Guide" />
-          </div>
-        )}
-        {showGrowthGuide() && (
-          <div
-            className="absolute"
-            style={{
-              transform: `rotate(${degree}deg)`,
-              transformOrigin: transformOrigin,
-            }}
-          >
-            <Draggable disabled={guideLocked} onDrag={handleDrag}>
-              <img
-                className="processedImage"
-                src={transparentGuide}
-                alt="Processed"
-                style={{
-                  maxWidth: `${guideWidthInPixels}px`,
-                  maxHeight: `${guideHeightInPixels}px`,
-                  //transformOrigin: "50% 50%",
-                  pointerEvents: guideLocked ? "none" : "auto",
-                }}
-              />
-            </Draggable>
-          </div>
-        )}
+        <div className="w-1/3 bg-gray-200 p-4 rounded-xl">
+          <img src={referenceImageSource()} alt="Gnathiometer Growth Guide" />
+        </div>
+        <div
+          className="absolute"
+          style={{
+            transform: `rotate(${degree}deg)`,
+            transformOrigin: transformOrigin,
+          }}
+        >
+          <Draggable disabled={guideLocked} onDrag={handleDrag}>
+            <img
+              className="processedImage"
+              src={transparentGuide}
+              alt="Processed"
+              style={{
+                maxWidth: `${guideWidthInPixels}px`,
+                //transformOrigin: "50% 50%",
+                pointerEvents: guideLocked ? "none" : "auto",
+              }}
+            />
+          </Draggable>
+        </div>
       </div>
 
       <div className="flex justify-center my-8">
-        {markers.length < 2 ? (
-          <button
-            className="bg-gray-200 hover:bg-gray-300 border-gray-300 px-32 py-8 text-2xl rounded-xl border-4 focus:border-gray-200 w-1/2"
-            onClick={() => navigate("/upload-image-fg")}
-          >
-            Re-Upload ⬆️
-          </button>
-        ) : (
+        <>
           <div className="flex space-x-4">
             <div className="flex flex-col items-center space-y-2 w-1/2">
               <input
@@ -358,8 +196,38 @@ export default function MeasureGrowth() {
             >
               {guideLocked ? "🔒" : "🔓"}
             </button>
+            <div className="flex flex-col items-center space-y-2 w-1/2">
+              <input
+                type="range"
+                min={`${Math.floor(width / 15)}`}
+                max={`${width}`}
+                step="1"
+                value={guideWidthInPixels}
+                onChange={(e) => {
+                  const newWidth = parseFloat(e.target.value);
+                  setGuideWidthInPixels(newWidth);
+                }}
+                className="w-full"
+              />
+              <label className="text-xl">
+                Current Guide Width: {guideWidthInPixels}
+              </label>
+              <input
+                type="number"
+                min={`${Math.floor(width / 15)}`}
+                max={`${width}`}
+                step="1"
+                value={guideWidthInPixels}
+                onChange={(e) => {
+                  const newWidth = parseFloat(e.target.value);
+                  setGuideWidthInPixels(newWidth);
+                }}
+                className="border-2 border-gray-300 rounded w-32 text-center"
+              />
+            </div>
           </div>
-        )}
+          <div className="flex space-x-4"></div>
+        </>
       </div>
 
       <div className="flex justify-center my-8">
